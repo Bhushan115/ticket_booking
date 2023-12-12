@@ -1,0 +1,90 @@
+def get_data(filters):
+    base_query = """
+        SELECT
+        
+                SLE.item_code as "Item",
+                    (SELECT BA.product_source
+                    FROM `tabBatch` as BA
+                    WHERE BA.name = SLE.batch_no) AS "Source",
+                
+
+            
+            CASE 
+                WHEN SLE.voucher_type = 'Sales Invoice' 
+                     THEN (
+                        SELECT
+                            SUM(SII.qty) as "Quantity",
+                            SII.item_code,
+                            SUM(SII.amount) as "Revenue"
+                        FROM `tabSales Invoice` AS SI
+                        JOIN `tabSales Invoice Item` AS SII ON SII.parent = SI.name
+                        WHERE SLE.voucher_no = SI.name OR SI.name=SII.parent
+                        GROUP BY SII.item_code, SI.name
+                     )
+                
+                ELSE 0
+                END as "Result"
+                
+        FROM    
+         `tabStock Ledger Entry` SLE
+    
+
+    """
+    where_query = f""" 
+        WHERE
+            DATE(SLE.posting_date) BETWEEN '{filters.from_date}' AND '{filters.to_date}'
+    """
+
+    group_by = """
+        GROUP BY 
+            SLE.item_code
+            
+            
+    """
+    return frappe.db.sql(f"""
+        {base_query}
+        {where_query}
+        {group_by}
+    """, as_dict=1)
+
+
+def get_columns():
+    return [
+        {
+            "fieldname": "Item",
+            "label": "Item",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "fieldname": "Source",
+            "label": "Source",
+            "fieldtype": "Data",
+            "width": 120
+        },
+        {
+            "fieldname": "Destination",
+            "label": "Destination",
+            "fieldtype": "Data",
+            "default": 0,
+            "width": 120
+        },
+        {
+            "fieldname": "Quantity",
+            "label": "Quantity",
+            "fieldtype": "Data",
+            "default": 0,
+            "width": 120
+        },
+        {
+            "fieldname": "Revenue",
+            "label": "Revenue",
+            "fieldtype": "Data",
+            "default": 0,
+            "width": 120
+        }
+    ]
+
+report_data = get_data(filters)
+columns = get_columns()
+data = columns, report_data

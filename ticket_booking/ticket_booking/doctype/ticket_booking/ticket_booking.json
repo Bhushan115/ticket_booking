@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-11-27 13:06:30.806848",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "movie",
+  "date",
+  "number_of_tickets",
+  "show",
+  "theater",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "movie",
+   "fieldtype": "Link",
+   "label": "Movie",
+   "options": "Movie"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "number_of_tickets",
+   "fieldtype": "Int",
+   "label": "Number of Tickets"
+  },
+  {
+   "fieldname": "show",
+   "fieldtype": "Link",
+   "label": "Show",
+   "options": "Theater Show"
+  },
+  {
+   "fetch_from": "show.theater",
+   "fetch_if_empty": 1,
+   "fieldname": "theater",
+   "fieldtype": "Link",
+   "label": "Theater",
+   "options": "Theater Show",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Movie Theater",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-11-27 13:08:14.527485",
+ "modified_by": "Administrator",
+ "module": "Ticket Booking",
+ "name": "Ticket Booking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_views": 1
+}
